@@ -61,18 +61,37 @@ if not exist "graphify-out\graph.json" (
   echo Build it in Claude:  /graphify %CODE_DIR% --directed
   popd & endlocal & exit /b 1
 )
-REM Report directed flag + node count of the LIVE root graph (should be directed:True).
+REM Require and report the directed flag + node count of the LIVE root graph.
+set "GRAPHIFY_PYTHON=python"
 if exist "graphify-out\.graphify_python" (
-  set /p GPY2=<graphify-out\.graphify_python
-  "!GPY2!" -c "import json;d=json.load(open('graphify-out/graph.json',encoding='utf-8'));print('directed:',d.get('directed'),'  nodes:',len(d.get('nodes',[])))"
+  set /p GRAPHIFY_PYTHON=<graphify-out\.graphify_python
+)
+"%GRAPHIFY_PYTHON%" -c "import json,sys;d=json.load(open('graphify-out/graph.json',encoding='utf-8'));print('directed:',d.get('directed'),'  nodes:',len(d.get('nodes',[])));sys.exit(0 if d.get('directed') is True else 1)"
+set "GRAPHIFY_RESULT=%ERRORLEVEL%"
+if not "%GRAPHIFY_RESULT%"=="0" (
+  echo ERROR: graphify-out\graph.json could not be read or its directed flag is not true.
+  popd
+  endlocal & exit /b 1
 )
 echo.
 echo --- god nodes (top 5) ---
 "%GRAPHIFY%" god-nodes --top 5
+set "GRAPHIFY_RESULT=%ERRORLEVEL%"
+if not "%GRAPHIFY_RESULT%"=="0" (
+  echo ERROR: graphify god-nodes failed with exit code %GRAPHIFY_RESULT%.
+  popd
+  endlocal & exit /b %GRAPHIFY_RESULT%
+)
 echo.
 echo --- sample query ---
 REM --context call: "modules" otherwise triggers import-only context, which returns one node here.
 "%GRAPHIFY%" query "What are the main modules and how do they connect?" --context call
+set "GRAPHIFY_RESULT=%ERRORLEVEL%"
+if not "%GRAPHIFY_RESULT%"=="0" (
+  echo ERROR: graphify query failed with exit code %GRAPHIFY_RESULT%.
+  popd
+  endlocal & exit /b %GRAPHIFY_RESULT%
+)
 
 popd
-endlocal
+endlocal & exit /b 0
