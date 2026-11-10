@@ -1,0 +1,7 @@
+{
+  "name": "github-issues",
+  "description": "GitHub issues of a repository as one markdown file per issue (zip)",
+  "command": ["uv", "run", "python", "main.py", "--repo", "{url}", "--out", "{out}"],
+  "check_command": ["uv", "run", "python", "main.py", "--help"],
+  "timeout_seconds": 600
+}

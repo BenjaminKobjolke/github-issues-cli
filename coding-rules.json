@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "COMMON_RULES.md": 19,
+    "IMPLEMENTATION_FLOW.md": 25,
+    "PYTHON_RULES.md": 9,
+    "implementation_flow_addons/graphify.md": 15,
+    "implementation_flow_addons/graphify_flow.md": 2
+  },
+  "delegation": "codex",
+  "pointerVersion": 3,
+  "pluginRoot": "D:\\GIT\\BenjaminKobjolke\\claude-coding-rules\\plugins\\coding-rules"
+}

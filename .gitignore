@@ -1,0 +1,41 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+
+# Tooling caches
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+.dmypy.json
+
+# Downloaded issues — output, not source
+issues/
+
+# Agent scratch — PLAN.md itself is kept, its generated companions are not
+.claude
+claude-plans/
+*-delegate.log
+PLAN-changed-files.md
+PLAN-post-implementation-check.md
+tickets/
+HANDOFF.md
+PLAN.md
+PLAN_*.md
+graphify-out/
+src/graphify-out/
+tmp/commit_msg.tmp
+code_analysis_results/
+tools/analyze_code_config.bat
+.reasonix/

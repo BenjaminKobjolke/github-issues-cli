@@ -1,0 +1,28 @@
+{
+  "files": {
+    "TICKETS_WATCHER_COMMANDS.md": 3
+  },
+  "command_check_scripts": [
+    "analyze_changed_and_new_files.bat",
+    "analyze_code.bat",
+    "analyze_code_config.bat",
+    "analyze_code_config.example.bat",
+    "run_tests.bat"
+  ],
+  "analysis_commands": [
+    "tools\\run_tests.bat",
+    "tools\\analyze_changed_and_new_files.bat"
+  ],
+  "analysis_commands_seen": {
+    "scripts": [
+      "analyze_changed_and_new_files.bat",
+      "analyze_code.bat",
+      "analyze_code_config.bat",
+      "analyze_code_config.example.bat",
+      "run_tests.bat"
+    ],
+    "tests": false
+  },
+  "analysis_tests_answered": true,
+  "project_id": 12400
+}
