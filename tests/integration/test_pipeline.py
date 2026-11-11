@@ -110,6 +110,42 @@ def test_second_run_skips_everything_without_fetching_comments(
     assert gh.view_calls == 0
 
 
+def test_issue_in_done_folder_is_skipped_without_fetching_comments(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo_dir = tmp_path / REPO_DIR
+    done_file = repo_dir / "done" / "00001-icons-have-a-low-resolution.md"
+    done_file.parent.mkdir(parents=True)
+    done_file.write_text("already reviewed", encoding="utf-8")
+    gh = FakeGh(ISSUES)
+
+    exit_code = run(make_settings(tmp_path), runner=gh)
+
+    assert exit_code == EXIT_OK
+    assert "wrote 1, skipped 1" in capsys.readouterr().out
+    assert gh.view_calls == 1
+    assert not list(repo_dir.glob("00001-*.md"))
+    assert done_file.read_text(encoding="utf-8") == "already reviewed"
+
+
+def test_force_never_rewrites_or_restores_a_done_issue(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    repo_dir = tmp_path / REPO_DIR
+    done_file = repo_dir / "done" / "00001-icons-have-a-low-resolution.md"
+    done_file.parent.mkdir(parents=True)
+    done_file.write_text("already reviewed", encoding="utf-8")
+    old_file = repo_dir / "00001-old-title.md"
+    old_file.write_text("previous copy", encoding="utf-8")
+
+    exit_code = run(make_settings(tmp_path, force=True), runner=FakeGh(ISSUES))
+
+    assert exit_code == EXIT_OK
+    assert "wrote 1, skipped 1" in capsys.readouterr().out
+    assert old_file.read_text(encoding="utf-8") == "previous copy"
+    assert done_file.read_text(encoding="utf-8") == "already reviewed"
+
+
 def test_force_rewrites_and_drops_the_old_name_of_a_renamed_issue(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

@@ -9,6 +9,7 @@ SLUG_UNSAFE_CHARS = r"[^a-z0-9]+"
 SLUG_MAX_LEN = 50
 SLUG_FALLBACK = "issue"
 REPO_DIR_SEPARATOR = "__"  # "owner/repo" -> "owner__repo", one folder level
+DONE_DIR = "done"  # subfolder a review workflow moves processed issues into
 GHOST_AUTHOR = "ghost"  # what GitHub shows for a deleted account
 
 GH_EXECUTABLE = "gh"

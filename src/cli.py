@@ -9,6 +9,7 @@ from src.constants import (
     DEFAULT_LIMIT,
     DEFAULT_OUT_DIR,
     DEFAULT_STATE,
+    DONE_DIR,
     EXIT_BAD_INPUT,
     EXIT_GH_FAILED,
     EXIT_OK,
@@ -56,11 +57,13 @@ def run(settings: Settings, runner: GhRunner = run_gh) -> int:
     try:
         for issue in list_issues(settings, runner):
             existing = list(target_dir.glob(issue_glob(issue)))
+            done = list((target_dir / DONE_DIR).glob(issue_glob(issue)))
             # The filesystem is the resume state, and skipping happens before the comments
             # call, so a re-run costs one list call plus one view call per new issue.
             # shortcut: new comments on an issue that already has a file are missed until --force.
-            if existing and not settings.force:
-                AppLogger.info(f"skipping existing {existing[0].name}")
+            # A done issue stays skipped with --force so it never re-enters the review queue.
+            if done or (existing and not settings.force):
+                AppLogger.info(f"skipping existing {(done or existing)[0].name}")
                 skipped += 1
                 continue
 

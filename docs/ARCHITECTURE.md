@@ -34,7 +34,7 @@ Settings (frozen)
    │  list_issues()   gh issue list -R <repo> --state <s> --limit <n> --search sort:created-asc --json ...
    ▼
 list[Issue]                            raw dicts stop at Issue.from_api()
-   │  per issue: file with that number exists and no --force?  -> skip (no further gh call)
+   │  per issue: file with that number in the folder or its done/ subfolder?  -> skip (no further gh call)
    │  fetch_comments()  gh issue view <n> -R <repo> --json comments
    ▼
 issue_filename() / issue_markdown()    pure, no I/O
@@ -66,9 +66,11 @@ the real parsing, skipping and writing run without a network.
 
 ### The filesystem is the resume state
 
-An issue whose number already has a file is skipped unless `--force` is passed. The check globs
-`<number:05d>-*.md`, so a renamed title is not mistaken for a new issue. It runs **before** the
-comments call, which keeps a re-run at one `gh issue list` plus one `gh issue view` per new issue.
+An issue whose number already has a file in the repo folder is skipped unless `--force` is passed.
+The check globs `<number:05d>-*.md`, so a renamed title is not mistaken for a new issue. A file
+with that number in the folder's `done/` subfolder is always skipped, including with `--force`; the
+`done/` folder is never rewritten, renamed or deleted. The check runs **before** the comments call,
+which keeps a re-run at one `gh issue list` plus one `gh issue view` per new issue.
 
 Known limit, marked with a `shortcut:` comment in `cli.py`: new comments on an issue that already
 has a file are not picked up without `--force`. The user chose this over comparing `updatedAt`.

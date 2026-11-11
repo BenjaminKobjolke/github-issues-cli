@@ -45,7 +45,7 @@ start.bat --repo https://github.com/mherrmann/fman/issues/920
 | `--out` | `./issues` | output root |
 | `--state` | `open` | `open`, `closed` or `all` |
 | `--limit` | `5000` | maximum number of issues; `gh`'s own default would be 30 |
-| `--force` | off | rewrite files that already exist |
+| `--force` | off | rewrite files that already exist in the repo folder; never touches `done/` |
 | `--logging` | `error` | `error` or `verbose` |
 
 Output on success is a single line:
@@ -97,11 +97,14 @@ The padded number makes the folder sort by issue number. The slug is the lower-c
 everything outside `a-z0-9` turned into `-`, at most 50 characters.
 
 **Resume is just the filesystem.** An issue that already has a file (matched by its number, so a
-renamed title does not count as new) is skipped, and its comments are not fetched again. A
-re-run therefore costs one `gh issue list` call plus one `gh issue view` per new issue.
+renamed title does not count as new) is skipped, and its comments are not fetched again. A file for
+the issue in the repo folder's `done/` subfolder also counts as already downloaded, including with
+`--force`; nothing inside `done/` is ever rewritten, renamed or deleted. A re-run therefore costs
+one `gh issue list` call plus one `gh issue view` per new issue.
 
 The flip side: new comments on an issue that already has a file are not picked up. Pass
-`--force` to rewrite everything; it also removes the old file of an issue whose title changed.
+`--force` to rewrite existing files in the repo folder; it also removes the old file of an issue
+whose title changed.
 
 ## Data-server integration
 
