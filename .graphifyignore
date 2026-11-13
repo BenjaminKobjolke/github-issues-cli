@@ -1,0 +1,23 @@
+# First-party Python lives in src/; root entry points remain included.
+/.git/
+/.mypy_cache/
+/.pytest_cache/
+/.ruff_cache/
+/.venv/
+/claude-plans/
+/code_analysis_results/
+/docs/
+/issues/
+/tests/
+/tickets/
+/tmp/
+/tools/
+
+# Exclude non-source and generated folders if added at the repository root.
+/assets/
+/build/
+/dist/
+/graphify-out/
+/migrations/
+/packages/
+/vendor/
